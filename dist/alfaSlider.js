@@ -16,8 +16,16 @@
 
 
     // set styles
-    $wrapper.css({ position: 'absolute', lineHeight: stepWidth + 'px' });
-    $parent.css({ position: 'relative', overflow: 'hidden' });
+    $wrapper.css({ 
+      position   : 'absolute', 
+      lineHeight : stepWidth + 'px',
+      display    : $parent.css('display'),
+    });
+
+    $parent.css({ 
+      position: 'relative', 
+      overflow: 'hidden' 
+    });
 
 
     // private methods
