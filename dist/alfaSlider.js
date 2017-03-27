@@ -8,41 +8,46 @@
 
 
     // private fields
-    var $wrapper  = this.wrapAll('<div></div>').parent();
-    var $parent   = $wrapper.parent();
-    var lastTop   = 0;
-    var stepWidth = $parent.height();
-    var animation = { opacity: ['toggle', 'swing'] };
+    var $container = this;
+    var $wrapper   = $container.wrapAll('<div></div>').parent();
+    var $element   = $container.children();
+    var level      = 0;
+    var minLevel;
+    var stepHeight;
 
 
     // set styles
     $wrapper.css({ 
-      position   : 'absolute', 
-      lineHeight : stepWidth + 'px',
-      display    : $parent.css('display'),
+      position    : 'relative',
+      overflow    : 'hidden',
     });
 
-    $parent.css({ 
-      position: 'relative', 
-      overflow: 'hidden' 
+    $container.css({ 
+      position    : 'absolute',
     });
 
 
     // private methods
+    function init() {
+      stepHeight  = $element.outerHeight(true);
+      minLevel    = -Math.floor($container.innerHeight() / stepHeight);
+      $wrapper.css('height', stepHeight);
+    }
+
     function complete() {
-      lastTop = lastTop - stepWidth;
-      lastTop = (Math.abs(lastTop) >= $wrapper.height()) ? 0 : lastTop;
-      $wrapper.css({ top: lastTop + 'px' });
-      $wrapper.animate(
-        { opacity: ['toggle', 'swing'] }, 
+      level = (level - 1 <= minLevel) ? 0 : level - 1;
+
+      $container.css({ top: level * stepHeight + 'px' });
+      $container.animate(
+        { opacity: ['1.0', 'swing'] }, 
         options.speed, 
         'easeInSine'
       );
     }
 
     function update() {
-      $wrapper.animate(
-        { opacity: ['toggle', 'swing'] }, 
+      $container.animate(
+        { opacity: ['0.0', 'swing'] }, 
         options.speed, 
         'easeInSine', 
         complete
@@ -51,6 +56,8 @@
 
 
     // run
+    init();
+    $(window).on('resize', init);
     setInterval(update, options.tick);
 
 
